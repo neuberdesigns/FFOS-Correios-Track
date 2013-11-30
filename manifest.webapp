@@ -1,0 +1,28 @@
+{
+	"name": "Correios Track",
+	"description": "Track packages on Correios",
+	"launch_path": "/index.html",
+
+	"icons": {
+		"128": "/images/icons/icon-128.png"
+	},
+	
+	"version": "1.0",
+	"type": "privileged",
+	"default_locale": "en",
+	
+	"developer": {
+		"name": "Neuber Oliveira",
+		"url": "https://github.com/neuberdesigns/FFOS-Correios-Track"
+	},
+	
+	"permissions": {
+		"systemXHR": {}
+	},
+	
+	"locales": {
+		"pt_BR": {
+			"description": "Rastreie pacotes nos Correios",
+		}
+	} 
+}
