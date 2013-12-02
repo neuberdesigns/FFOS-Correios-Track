@@ -1,15 +1,18 @@
 {
 	"name": "Correios Track",
-	"description": "Track packages on Correios",
+	"description": "Rastreie pacotes nos Correios",
 	"launch_path": "/index.html",
 
 	"icons": {
+		"30": "/images/icons/icon-30.png",
+		"60": "/images/icons/icon-60.png",
+		"90": "/images/icons/icon-90.png",
 		"128": "/images/icons/icon-128.png"
 	},
 	
 	"version": "1.0",
 	"type": "privileged",
-	"default_locale": "en",
+	"default_locale": "pt_BR",
 	
 	"developer": {
 		"name": "Neuber Oliveira",
@@ -17,12 +20,14 @@
 	},
 	
 	"permissions": {
-		"systemXHR": {}
+		"systemXHR": {
+			"description": "Consultar webservice dos correios"
+		}
 	},
 	
 	"locales": {
-		"pt_BR": {
-			"description": "Rastreie pacotes nos Correios",
+		"en": {
+			"description": "Track packages on Correios"
 		}
 	} 
 }

@@ -18,27 +18,31 @@ $('document').ready(function(){
 	});
 
 	$('#bt-save-code').on('click', function(){
-		var code = $('#search-code').val();
+		var code = $('#search-code').val().toUpperCase();
 		
-		idb.insert(
-			code, 
-			function(code){
-				addCodeToList(code);
-				utils.status.show('Código <b>'+code+'</b> foi adicionado', 3000);
-			},
-			
-			//Error
-			function(e){
-				var msg;
-				if( e.name == 'ConstraintError'){
-					msg = "Este código já esta em sua lista";
-				}else{
-					msg = e.message;
-				}
+		if( code.length==13 ){
+			idb.insert(
+				code, 
+				function(code){
+					addCodeToList(code);
+					utils.status.show('Código <b>'+code+'</b> foi adicionado', 3000);
+				},
 				
-				utils.status.show(msg, 5000);
-			}
-		);
+				//Error
+				function(e){
+					var msg;
+					if( e.name == 'ConstraintError'){
+						msg = "Este código já esta em sua lista";
+					}else{
+						msg = e.message;
+					}
+					
+					utils.status.show(msg, 5000);
+				}
+			);
+		}else{
+			utils.status.show('O código deve ter 13 caracteres');
+		}
 	});
 	
 	$('#bt-delete-code').on('click', function(){

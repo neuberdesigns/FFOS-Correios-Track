@@ -38,19 +38,17 @@
  	<script defer src="js/database.js"></script>
  	<script defer src="js/correiostrack.js"></script>
  </head>
- <body>
+<body role="application">
 	<section data-type="sidebar">
-		<header>
-			
+		<header>			
 			<h1>Meus Códigos</h1>
 		</header>
 		<nav>
-			<ul id="codes-list">
-			</ul>
+			<ul id="codes-list"></ul>
 		</nav>
 	</section>
 	
-	<section id="drawer" role="region">
+	<section id="drawer" role="region" class="content scrollable">
 		<header>
 			<a href="#content"><span class="icon icon-menu">hide sidebar</span></a>
 			<a href="#drawer"><span class="icon icon-menu">show sidebar</span></a>
@@ -63,19 +61,15 @@
 				<button type="reset">Remove text</button>
 			</form>
 		</header>
-		<div id="progress-bar" class="" style="display:none;">
+		<div id="progress-bar" class="hide">
 			<progress class="pack-activity light" value="0" max="100"></progress>
 		</div>
 		
-		<div id="main-content" role="main">
+		<div id="main-content" role="main" class="">
 			<button id="bt-track-code">Rastrear</button>
-			
-			<div id="notification">
-				<h2></h2>
-			</div>
-			
-			<div id="track-response"></div>
+			<div id="track-response" class=""></div>
 		</div>
+		
 	</section>	
  </body>
  </html>
