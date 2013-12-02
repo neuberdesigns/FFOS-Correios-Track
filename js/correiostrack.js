@@ -7,10 +7,6 @@ $('document').ready(function(){
 		var code = getById('search-code').value;
 		
 		if( code.length==13 ){
-			if( $('#progress-bar').is(':hidden') ){
-				toggleProgress();
-			}
-
 			trackCode(code);
 		}else{
 			utils.status.show('O código deve ter 13 caracteres');
@@ -47,11 +43,29 @@ $('document').ready(function(){
 	
 	$('#bt-delete-code').on('click', function(){
 		var code = $('#search-code').val();
+		idb.findByIndex(code, 'code', 
+			function(r, e){
+				console.log('found');
+				if( r!= null ){
+					idb.delete(r.id, function(ev){
+						removeFromCodeList(code);
+						utils.status.show('Código <b>'+code+'</b> foi removido', 3000);
+					});
+				}
+			},
+			
+			function(ev){
+				console.log(ev.message);
+			}
+		);
 	});
 
-	$('#codes-list').on('click', '.track-code', function(){		
-		$('#search-code').val( $(this).text() );
+	$('#codes-list').on('click', '.track-code', function(){	
+		var code = $(this).text();
+		$('#search-code').val( code );
 		$('#track-response').html('');
+		
+		trackCode(code);
 	});
 });
 
@@ -91,7 +105,20 @@ function addCodeToList(code){
 	$('#codes-list').append( $('<li><a href="#content" class="track-code">'+code+'</a></li>') );
 }
 
+function removeFromCodeList(code){
+	code = code.toLowerCase();
+	$('#codes-list li').each(function(){
+		if( $(this).text().toLowerCase()==code ){
+			$(this).remove();
+		}
+	})
+}
+
 function trackCode(code){
+	if( $('#progress-bar').is(':hidden') ){
+		toggleProgress();
+	}
+	
 	//RB949609468CN
 	$('#track-response').html('');
 	var post = {

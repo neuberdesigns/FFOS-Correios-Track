@@ -162,9 +162,13 @@ var idb = {
 	
 	delete: function(id, callback, error){
 		var remove;
-		var store = idb.database.transaction(idb.getTable(), idb.READ_ONLY).objectStore(idb.getTable());
+		var store = idb.database.transaction(idb.getTable(), idb.READ_WRITE).objectStore(idb.getTable());
 		
 		remove = store.delete(id);
+		
+		remove.onsuccess = function(event){
+			idb.callCb(callback, event);
+		}
 		
 		remove.onerror = error;
 	},
