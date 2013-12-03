@@ -48,7 +48,7 @@
 		</nav>
 	</section>
 	
-	<section id="drawer" role="region" class="content scrollable">
+	<section id="drawer" role="region" class="content">
 		<header>
 			<a href="#content"><span class="icon icon-menu">hide sidebar</span></a>
 			<a href="#drawer"><span class="icon icon-menu">show sidebar</span></a>
@@ -66,8 +66,12 @@
 			<progress class="pack-activity light" value="0" max="100"></progress>
 		</div>
 		
-		<div id="main-content" role="main" class="">
-			<button id="bt-track-code">Rastrear</button>
+		<div id="main-content" role="main" class="scrollable">
+			
+			<div class="button-group">
+				<button id="bt-track-code">Rastrear</button>
+			</div>
+			
 			<div id="track-response" class=""></div>
 		</div>
 		

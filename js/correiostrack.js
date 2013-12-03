@@ -7,7 +7,7 @@ $('document').ready(function(){
 		var code = getById('search-code').value;
 		
 		if( code.length==13 ){
-			trackCode(code);
+			trackCode(code, true);
 		}else{
 			utils.status.show('O código deve ter 13 caracteres');
 		}
@@ -15,10 +15,12 @@ $('document').ready(function(){
 
 	$('#bt-save-code').on('click', function(){
 		var code = $('#search-code').val().toUpperCase();
+		var cache = $.trim( $('#track-response').html() );
 		
 		if( code.length==13 ){
 			idb.insert(
-				code, 
+				code,
+				cache,
 				function(code){
 					addCodeToList(code);
 					utils.status.show('Código <b>'+code+'</b> foi adicionado', 3000);
@@ -65,7 +67,7 @@ $('document').ready(function(){
 		$('#search-code').val( code );
 		$('#track-response').html('');
 		
-		trackCode(code);
+		trackCode(code, false);
 	});
 });
 
@@ -97,8 +99,15 @@ function showError(message){
 	});
 }
 
-function toggleProgress(){
-	$('#progress-bar').toggle();
+function toggleProgress(forceShow, forceHide){
+	var $progress = $('#progress-bar');
+	
+	if( forceShow )
+		$progress.show();
+	else if( forceHide )
+		$progress.hide();
+	else
+		$progress.toggle();
 }
 
 function addCodeToList(code){
@@ -114,11 +123,38 @@ function removeFromCodeList(code){
 	})
 }
 
-function trackCode(code){
-	if( $('#progress-bar').is(':hidden') ){
-		toggleProgress();
-	}
+function showHistory(content){
+	toggleProgress();
+	$('#track-response').html( content );
+}
+
+function trackCode(code, update){
+	toggleProgress(true);
 	
+	idb.findByIndex(code, 'code', function(r, ev){
+		if( r!=null ){
+			showHistory(r.cache);
+			if( update ){
+				toggleProgress(true);
+				getFromWeb(code, function(response){
+					showHistory(response);
+					r.cache = response;
+					
+					idb.update(r, function(){
+						utils.status.show('Rastreamento atualizado');
+					});
+				});
+			}
+		}else{
+			getFromWeb(code, function(response){
+				showHistory(response);
+			});
+		}
+	});
+	
+}
+
+function getFromWeb(code, cb){
 	//RB949609468CN
 	$('#track-response').html('');
 	var post = {
@@ -137,28 +173,39 @@ function trackCode(code){
 	};
 	
 	externalRequest.request('POST', 'http://websro.correios.com.br/sro_bin/txect01$.QueryList', post, function(){
-		toggleProgress();
-		
 		if( this.status == 200 ){
+			var history = '';
+			var entry = '';
 			var resp = this.responseText;
 			var $html = $(resp);
 			var $trs = $html.find('table tbody > tr');
 			
-			$trs.each( function(i){
-				if( i>0 ){
-					$tds = $(this).find('td');
-					
-					if( $tds.length>1 ){						
-						date = $tds.eq(0).text();
-						place = $tds.eq(1).text();
-						status = $tds.eq(2).text();
+			if( $trs.length>0 ){		
+				$trs.each( function(i){
+					if( i>0 ){
+						$tds = $(this).find('td');
 						
-						h1 = '<h1>'+status+'</h1>';
-						h2 = '<h2>'+date+' '+place+'<h2>';
-						$('#track-response').append( $(h1+h2) );
+						if( $tds.length>1 ){						
+							date = $tds.eq(0).text();
+							place = $tds.eq(1).text();
+							status = $tds.eq(2).text();
+							
+							h1 = '<h1>'+status+'</h1>';
+							h2 = '<h2>'+date+' '+place+'<h2>';
+							hr = '<hr />'
+							
+							entry = h1+h2+hr;
+							history += entry;
+						}
 					}
-				}
-			});
+				});				
+				idb.callCb(cb, history);
+				
+			}else{
+				toggleProgress();
+				utils.status.show('O código não existe ou não esta disponível', 6000);
+			}
+			
 		}
 	});
 }

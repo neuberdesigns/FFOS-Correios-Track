@@ -84,10 +84,11 @@ var idb = {
 		}
 	},
 	
-	insert: function(code, callback, errorcb){
+	insert: function(code, cache, callback, errorcb){
 		var data = {
 			'code': code,
-			'created': 'new Date()',
+			'cache': cache,
+			'created': new Date(),
 		};
 		
 		var transaction = idb.database.transaction([idb.getTable()], idb.READ_WRITE);
@@ -158,6 +159,27 @@ var idb = {
 				}
 			}
 		};
+	},
+	
+	update: function(data, callback, error){
+		var result = null;
+		var transaction = idb.database.transaction([idb.getTable()], idb.READ_WRITE);
+		var store = transaction.objectStore( idb.getTable() );
+		var request = store.get(data.id);
+		var update;
+		
+		request.onsuccess = function(event) {
+			result = event.target.result;
+			update = store.put(data);
+			
+			update.onsuccess = function(event) {
+				idb.callCb(callback, data, event);
+			}
+			
+			update.onerror = error;
+		}
+		
+		request.onerror = error;
 	},
 	
 	delete: function(id, callback, error){
