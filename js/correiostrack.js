@@ -190,11 +190,12 @@ function getFromWeb(code, cb){
 							place = $tds.eq(1).text();
 							status = $tds.eq(2).text();
 							
-							h1 = '<h1>'+status+'</h1>';
-							h2 = '<h2>'+date+' '+place+'<h2>';
-							hr = '<hr />'
+							entry  = '<div class="history-item">';
+							entry += '	<div class="history-title">'+status+'</div>';
+							entry += '	<div class="history-content">'+date+' '+place+'</div>';
+							entry += '	<hr />';
+							entry += '</div>'
 							
-							entry = h1+h2+hr;
 							history += entry;
 						}
 					}

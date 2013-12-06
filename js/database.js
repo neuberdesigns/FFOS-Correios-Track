@@ -45,8 +45,6 @@ var idb = {
 		idb.request = window.indexedDB.open(idb.databaseName, idb.DB_VERSION);
 		
 		idb.request.onupgradeneeded = function(event) {
-			console.log('Upgrading...');
-			
 			var database = idb.request.result;
 			for (var i = 0; i < idb.schema.length; i++) {
 				table = idb.schema[i];
@@ -69,11 +67,7 @@ var idb = {
 		}
 		
 		idb.request.onsuccess = function(event) {
-			idb.database = idb.request.result;
-			//idb.database = idb.request.result;
-			
-			console.log('Database is open');
-			
+			idb.database = idb.request.result;			
 			if( typeof(callback)=='function' ){
 				callback.apply(this, []);
 			}
@@ -97,7 +91,6 @@ var idb = {
 		insert = store.add(data);
 				
 		insert.onsuccess = function(event){
-			console.log("Woot! Did it");
 			idb.callCb(callback, code);
 		}
 		

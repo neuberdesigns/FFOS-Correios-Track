@@ -1,3 +1,16 @@
 #bt-track-code {
 	margin-top: 10px;
 }
+
+.history-item {
+	padding: 5px 10px;
+}
+
+.history-item .history-title {
+	font-size: 18px;
+	margin-bottom: 10px;
+}
+
+.history-item .history-content {
+	font-size: 14px;
+}
